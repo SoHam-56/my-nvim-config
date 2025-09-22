@@ -1,8 +1,3 @@
--- local on_attach = require("nvchad.configs.lspconfig").on_attach
--- local on_init = require("nvchad.configs.lspconfig").on_init
--- local capabilities = require("nvchad.configs.lspconfig").capabilities
--- local lspconfig = require "lspconfig"
-
 local lspconfig = vim.lsp.config
 
 -- Shared on_attach: Add keymaps and features for all LSPs
@@ -13,8 +8,6 @@ local on_attach = function(client, bufnr)
   vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
   vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
   vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-  vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, opts)
-  vim.keymap.set("n", "]d", vim.diagnostic.goto_next, opts)
 end
 
 -- Capabilities for better completion support
@@ -60,7 +53,7 @@ lspconfig("clangd", {
 
 -- SystemVerilog / Verilog
 lspconfig("verible", {
-  cmd = { "verible-verilog-ls", "--rules=+line-length=length:200" },
+  cmd = { "verible-verilog-ls", "--rules=+line-length=length:200+explicit-parameter-storage-type=false" },
   filetypes = { "verilog", "systemverilog" },
   on_attach = on_attach,
   capabilities = capabilities,
@@ -88,7 +81,7 @@ lspconfig("yamlls", {
   root_dir = get_root_dir(),
 })
 
--- Markdown (optional)
+-- Markdown
 lspconfig("marksman", {
   on_attach = on_attach,
   capabilities = capabilities,
