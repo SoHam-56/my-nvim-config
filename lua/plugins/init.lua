@@ -56,4 +56,32 @@ return {
       require "configs.mason-lint"
     end,
   },
+
+  {
+    "nvim-tree/nvim-tree.lua",
+    opts = {
+      sync_root_with_cwd = true,
+      respect_buf_cwd = true,
+      update_focused_file = {
+        enable = true,
+        update_root = true,
+      },
+      view = {
+        adaptive_size = true,
+        preserve_window_proportions = true,
+      },
+    },
+  },
+
+  {
+    -- % jumping + highlighting of begin/end, module/endmodule, case/endcase ...
+    "andymass/vim-matchup",
+    lazy = false, -- must own matchparen from startup, else built-in matchparen double-highlights
+    init = function()
+      vim.g.matchup_matchparen_offscreen = { method = "popup" }
+      vim.g.matchup_matchparen_deferred = 1
+    end,
+  },
+
+  require("configs.claudecode"),
 }
