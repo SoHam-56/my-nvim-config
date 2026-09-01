@@ -1,0 +1,20 @@
+#!/bin/sh
+# verible-verilog-format exits 0 and echoes its input back unchanged whenever the
+# file has a syntax error, so conform silently looks like a no-op (<leader>fm
+# "does nothing"). Wrap it so a parse failure becomes a real error conform reports.
+VERIBLE=${VERIBLE_FORMAT_BIN:-$(command -v verible-verilog-format 2>/dev/null)}
+[ -n "$VERIBLE" ] || VERIBLE="$HOME/.local/share/nvim/mason/bin/verible-verilog-format"
+
+out=$(mktemp) || exit 1
+err=$(mktemp) || exit 1
+"$VERIBLE" "$@" >"$out" 2>"$err"
+rc=$?
+
+if [ "$rc" -ne 0 ] || grep -q 'syntax error' "$err"; then
+  head -20 "$err" >&2
+  rm -f "$out" "$err"
+  exit 1
+fi
+
+cat "$out"
+rm -f "$out" "$err"
